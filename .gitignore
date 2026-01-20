@@ -1,0 +1,17 @@
+# Environment & secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Data & logs
+data/
+logs/
+
+# Docker
+postgres_data/
+
+# OS
+.DS_Store
