@@ -1,0 +1,108 @@
+version: 2
+
+models:
+  - name: stg_telegram_messages
+    description: "Staging table for raw Telegram messages from channels"
+    columns:
+      - name: message_id
+        description: "Unique identifier for each message"
+        tests:
+          - unique
+          - not_null
+      - name: channel_name
+        description: "Name of the Telegram channel"
+        tests:
+          - not_null
+      - name: message_date
+        description: "Timestamp of the message"
+        tests:
+          - not_null
+      - name: message_text
+        description: "Text content of the message"
+      - name: has_media
+        description: "Whether the message contains media"
+      - name: image_path
+        description: "Path to downloaded image (if present)"
+      - name: views
+        description: "Number of views for the message"
+        tests:
+          - not_null
+      - name: forwards
+        description: "Number of times the message was forwarded"
+
+  - name: dim_channels
+    description: "Dimension table for Telegram channels"
+    columns:
+      - name: channel_key
+        description: "Primary key for channel"
+        tests:
+          - unique
+          - not_null
+      - name: channel_name
+        description: "Name of the Telegram channel"
+        tests:
+          - not_null
+      - name: channel_type
+        description: "Category of channel (Medical, Pharmaceutical, Cosmetics, Other)"
+      - name: first_post_date
+        description: "Date of first post by channel"
+      - name: last_post_date
+        description: "Date of last post by channel"
+      - name: total_posts
+        description: "Total number of posts by channel"
+      - name: avg_views
+        description: "Average views per post"
+
+  - name: dim_dates
+    description: "Dimension table for dates"
+    columns:
+      - name: date_key
+        description: "Primary key for date"
+        tests:
+          - unique
+          - not_null
+      - name: date
+        description: "Date in YYYY-MM-DD format"
+      - name: year
+        description: "Year part of the date"
+      - name: month
+        description: "Month part of the date"
+      - name: day
+        description: "Day part of the date"
+      - name: weekday
+        description: "Day of week"
+
+  - name: fct_messages
+    description: "Fact table of Telegram messages"
+    columns:
+      - name: message_id
+        description: "Unique identifier for the message"
+        tests:
+          - unique
+          - not_null
+      - name: channel_key
+        description: "Foreign key to dim_channels"
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_channels')
+                field: channel_key
+      - name: date_key
+        description: "Foreign key to dim_dates"
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_dates')
+                field: date_key
+      - name: message_text
+        description: "Text content of the message"
+      - name: has_media
+        description: "Indicates if the message contains media"
+      - name: image_path
+        description: "Path to downloaded image if any"
+      - name: views
+        description: "Number of views of the message"
+      - name: forwards
+        description: "Number of times the message was forwarded"

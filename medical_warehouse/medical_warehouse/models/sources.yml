@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: raw       # this is the schema name in PostgreSQL
+    database: medical_dw   # your database name
+    schema: raw           # the schema where telegram_messages exists
+    tables:
+      - name: telegram_messages
