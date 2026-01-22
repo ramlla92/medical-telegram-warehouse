@@ -85,17 +85,15 @@ models:
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('dim_channels')
-                field: channel_key
+              to: ref('dim_channels')
+              field: channel_key
       - name: date_key
         description: "Foreign key to dim_dates"
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('dim_dates')
-                field: date_key
+              to: ref('dim_dates')
+              field: date_key
       - name: message_text
         description: "Text content of the message"
       - name: has_media
@@ -106,3 +104,32 @@ models:
         description: "Number of views of the message"
       - name: forwards
         description: "Number of times the message was forwarded"
+        
+  - name: fct_image_detections
+    description: "Fact table of image detections and classifications"
+    columns:
+      - name: message_id
+        description: "ID of the message associated with the image"
+        tests:
+          - not_null
+          - unique
+      - name: channel_key
+        description: "Foreign key to dim_channels"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_channels')
+              field: channel_key
+      - name: date_key
+        description: "Foreign key to dim_dates"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_dates')
+              field: date_key
+      - name: detected_class
+        description: "Object class detected by YOLO"
+      - name: confidence_score
+        description: "Confidence score from YOLO detection"
+      - name: image_category
+        description: "Categorical classification based on objects detected (promotional, product_display, lifestyle, other)"
